@@ -22,6 +22,7 @@ class _FormularioEventoState extends State<FormularioEvento> {
   late final TextEditingController _nomeController;
   late final TextEditingController _localController;
   late final TextEditingController _dataController;
+  DateTime? _dataSelecionada;
   bool _salvando = false;
 
   bool get _modoEdicao => widget.evento != null;
@@ -32,6 +33,33 @@ class _FormularioEventoState extends State<FormularioEvento> {
     _nomeController = TextEditingController(text: widget.evento?.nome);
     _localController = TextEditingController(text: widget.evento?.local);
     _dataController = TextEditingController(text: widget.evento?.data);
+    if (widget.evento?.data != null) {
+      final partes = widget.evento!.data.split('/');
+      if (partes.length == 3) {
+        _dataSelecionada = DateTime(
+          int.parse(partes[2]),
+          int.parse(partes[1]),
+          int.parse(partes[0]),
+        );
+      }
+    }
+  }
+
+  Future<void> _selecionarData() async {
+    final agora = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _dataSelecionada ?? agora,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) {
+      setState(() {
+        _dataSelecionada = picked;
+        _dataController.text =
+            '${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year}';
+      });
+    }
   }
 
   Future<void> _salvar() async {
@@ -93,7 +121,19 @@ class _FormularioEventoState extends State<FormularioEvento> {
           children: [
             Editor(label: 'Nome', controller: _nomeController),
             Editor(label: 'Local', controller: _localController),
-            Editor(label: 'Data', controller: _dataController),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: TextField(
+                controller: _dataController,
+                readOnly: true,
+                onTap: _selecionarData,
+                decoration: const InputDecoration(
+                  labelText: 'Data',
+                  border: OutlineInputBorder(),
+                  suffixIcon: Icon(Icons.calendar_today),
+                ),
+              ),
+            ),
             const SizedBox(height: 8),
             ElevatedButton(
               style: ElevatedButton.styleFrom(

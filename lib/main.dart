@@ -4,8 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import 'repository/evento_repository_local.dart';
-import 'screens/eventos/lista.dart';
+import 'screens/home.dart';
 
 void main() {
   if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
@@ -26,7 +25,7 @@ class AppEventos extends StatelessWidget {
         useMaterial3: true,
         colorSchemeSeed: Colors.teal,
       ),
-      home: ListaEventos(repository: EventoRepositoryLocal()),
+      home: const Home(),
     );
   }
 }

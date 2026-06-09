@@ -5,7 +5,7 @@ App mobile em Flutter para cadastrar, listar, editar e excluir eventos. Tenta co
 ## Integrantes
 
 Eduardo Batista Matos
-
+Luis Fernando Mendes
 ---
 
 ## Rotas da API
